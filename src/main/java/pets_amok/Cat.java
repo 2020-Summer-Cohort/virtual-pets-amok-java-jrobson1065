@@ -6,6 +6,7 @@ public class Cat extends VirtualPet implements Organic {
     private int cageCleanliness;
     private int waste;
     private int thirst;
+    private int needToGoToBathroom;
 
     public Cat(String name, String description) {
         super(name, description);
@@ -16,19 +17,19 @@ public class Cat extends VirtualPet implements Organic {
         this.health = 10 - (((((20 - hunger) - (10 -thirst)) / 2) + cageCleanliness) / 2);
         this.happiness = (health + attention) / 2;
         this.type = "Cat";
+        this.needToGoToBathroom = 0;
     }
 
     @Override
-    public int tick() {
+    public void tick() {
         hunger += 1;
         cageCleanliness -= 1;
         attention -= 1;
-        return getWaste();
     }
 
     @Override
     public void walk() {
-        System.out.println(getName() + " is a cat and was let outside to walk around.");
+        System.out.println(getName() + " is a cat and was let outside to walk around and use the litter box.");
     }
 
     @Override
@@ -42,6 +43,13 @@ public class Cat extends VirtualPet implements Organic {
     public void water() {
         thirst -= 3;
         cageCleanliness -= 1;
+    }
+
+    @Override
+    public void play() {
+        attention += 3;
+        hunger += 1;
+        thirst += 1;
     }
 
     @Override
@@ -67,5 +75,16 @@ public class Cat extends VirtualPet implements Organic {
     @Override
     public int getWaste() {
         return waste;
+    }
+
+    @Override
+    public int getNeedToGoToBathroom() {
+        return needToGoToBathroom;
+    }
+
+    @Override
+    public void usesBathroomInCage() {
+        cageCleanliness -= 4;
+        waste += 2;
     }
 }

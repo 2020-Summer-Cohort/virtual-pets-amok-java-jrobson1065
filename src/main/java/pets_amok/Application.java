@@ -19,9 +19,24 @@ public class Application {
 
     private static void gameLoop() {
         while (true) {
+            for (VirtualPet pet : pets) {
+                if (pet.getHealth() == 0) {
+                    runGameOver();
+                }
+                if (pet instanceof Organic) {
+                    if (((Organic) pet).getNeedToGoToBathroom() > 3) {
+                        ((Organic) pet).usesBathroomInCage();
+                    }
+                }
+            }
             optionMenu();
             actions();
         }
+    }
+
+    private static void runGameOver() {
+        System.out.println("Your pets weren't all taken care of. You lose.");
+        System.exit(0);
     }
 
     private static void actions() {
@@ -47,7 +62,8 @@ public class Application {
         System.out.println("\t6 - Clean Cage");
         System.out.println("\t7 - Adopt a Pet");
         System.out.println("\t8 - Admit a Pet");
-        System.out.println("\t9 - Quit");
+        System.out.println("\t9 - CHeck Litter Box");
+        System.out.println("\t0 - Quit");
     }
 
     private static void invalidEntry() {
@@ -65,36 +81,39 @@ public class Application {
             case 3:
                 walkOptions();
                 break;
-//            case 4:
-//                playOptions();
-//                break;
-//            case 5:
-//                oilOptions();
-//                break;
-//            case 6:
-//                cleanCageOptions();
-//                break;
-//            case 7:
-//                adoptOptions();
-//                break;
-//            case 8:
-//                admitOptions();
-//                break;
+            case 4:
+                playOptions();
+                break;
+            case 5:
+                oilOptions();
+                break;
+            case 6:
+                cleanCageOptions();
+                break;
+            case 7:
+                adoptOptions();
+                break;
+            case 8:
+                admitOptions();
+                break;
             case 9:
+                shelter.checkLitterBox();
+                break;
+            case 0:
                 System.exit(0);
         }
     }
 
     private static void showOrganicPets() {
         for (VirtualPet pet : pets)
-            if(pet instanceof Organic) {
+            if (pet instanceof Organic) {
                 System.out.println(pet.getName());
             }
     }
 
     private static void showRoboticPets() {
         for (VirtualPet pet : pets)
-            if(pet instanceof Robotic) {
+            if (pet instanceof Robotic) {
                 System.out.println(pet.getName());
             }
     }
@@ -137,21 +156,106 @@ public class Application {
         }
     }
 
+    private static void playOptions() {
+        System.out.println("Enter name to play with a single pet or enter \"all\" to play with all.");
+        showAllPets();
+        String response = input.nextLine();
+        if (response.equalsIgnoreCase("all")) {
+            shelter.playAll();
+        } else {
+            shelter.playPet(response);
+        }
+    }
+
+    private static void oilOptions() {
+        System.out.println("Enter name to play with a single pet or enter \"all\" to play with all.");
+        showRoboticPets();
+        String response = input.nextLine();
+        if (response.equalsIgnoreCase("all")) {
+            shelter.oilAll();
+        } else {
+            shelter.oilPet(response);
+        }
+    }
+
+    private static void cleanCageOptions() {
+        System.out.println("Enter name to clean a single pet's cage or enter \"all\" to clean all.");
+        showOrganicPets();
+        String response = input.nextLine();
+        if (response.equalsIgnoreCase("all")) {
+            shelter.cleanAll();
+        } else {
+            shelter.cleanPet(response);
+        }
+    }
+
+    private static void adoptOptions() {
+        System.out.println("Enter name to adopt a single pet.");
+        showAllPets();
+        String response = input.nextLine();
+        VirtualPet pet = shelter.returnPet(response);
+        System.out.println("You adopted " + pet.getName() + ". " + pet.getDescription());
+        shelter.removePet(response);
+    }
+
+    private static void admitOptions() {
+        String name = askPetName();
+        String description = askPetDescription();
+        int type = askPetType(name);
+        VirtualPet pet = new Cat(name, description);
+        switch (type) {
+            case 2:
+                pet = new Dog(name, description);
+                break;
+            case 3:
+                pet = new RoboticCat(name, description);
+                break;
+            case 4:
+                pet = new RoboticDog(name, description);
+        }
+        System.out.println("You admitted " + name + ". ");
+        shelter.addPet(pet);
+    }
+
+    private static int askPetType(String name) {
+        System.out.println("What type of pet is " + name + "?");
+        System.out.println("\t1 - Cat");
+        System.out.println("\t2 - Dog");
+        System.out.println("\t3 - Robotic Cat");
+        System.out.println("\t4 - Robotic Dog");
+        int type = input.nextInt();
+        input.nextLine();
+        return type;
+    }
+
+    private static String askPetDescription() {
+        System.out.println("Please enter pet's description:");
+        return input.nextLine();
+    }
+
+    private static String askPetName() {
+        System.out.println("Please enter pet's name:");
+        return input.nextLine();
+    }
+
     private static void showPets() {
+        int i = 1;
         for (VirtualPet pet : pets)
             if (pet instanceof Organic) {
-                System.out.println(pet.getName() + " (" + pet.getType() + ")\n" +
+                System.out.println("(" + i + ") " + pet.getName() + " (" + pet.getType() + ")\n" +
                         "\tHealth: " + pet.getHealth() +
                         "\tHappiness: " + pet.getHappiness() +
                         "\tHunger: " + ((Organic) pet).getHunger() +
                         "\t\tThirst: " + ((Organic) pet).getThirst() +
-                        "\t\tCage Cleanliness: " + ((Organic) pet).getHunger());
+                        "\t\tCage Cleanliness: " + ((Organic) pet).getHunger() + "\n");
+                i++;
             } else if (pet instanceof Robotic) {
-                System.out.println(pet.getName() + " (" + pet.getType() + ")\n" +
+                System.out.println("(" + i + ") " + pet.getName() + " (" + pet.getType() + ")\n" +
                         "\tHealth: " + pet.getHealth() +
                         "\tHappiness: " + pet.getHappiness() +
                         "\tOil Level: " + ((Robotic) pet).getOilLevel() +
-                        "\tMaintenance Needs: " + ((Robotic) pet).getMaintenanceNeeds());
+                        "\tMaintenance Needs: " + ((Robotic) pet).getMaintenanceNeeds() + "\n");
+                i++;
             }
     }
 

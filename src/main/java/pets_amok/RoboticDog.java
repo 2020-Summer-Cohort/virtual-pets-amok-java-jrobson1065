@@ -16,11 +16,10 @@ public class RoboticDog extends VirtualPet implements Robotic {
     }
 
     @Override
-    public int tick() {
+    public void tick() {
         oilLevel -= 1;
         maintenanceNeeds += 1;
         attention -= 1;
-        return 0;
     }
 
     @Override
@@ -36,6 +35,14 @@ public class RoboticDog extends VirtualPet implements Robotic {
         maintenanceNeeds -= 2;
         oilLevel += 3;
     }
+
+    @Override
+    public void play() {
+        attention += 3;
+        oilLevel -= 1;
+        maintenanceNeeds += 1;
+    }
+
 
     @Override
     public int getOilLevel() {

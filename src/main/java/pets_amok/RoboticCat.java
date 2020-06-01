@@ -16,11 +16,10 @@ public class RoboticCat extends VirtualPet implements Robotic{
     }
 
     @Override
-    public int tick() {
+    public void tick() {
         oilLevel -= 1;
         maintenanceNeeds += 1;
         attention -= 1;
-        return 0;
     }
 
     @Override
@@ -35,6 +34,13 @@ public class RoboticCat extends VirtualPet implements Robotic{
         System.out.println(getName() + "'s oil was filled and now feels great.");
         maintenanceNeeds -= 2;
         oilLevel += 3;
+    }
+
+    @Override
+    public void play() {
+        attention += 3;
+        oilLevel -= 1;
+        maintenanceNeeds += 1;
     }
 
     @Override

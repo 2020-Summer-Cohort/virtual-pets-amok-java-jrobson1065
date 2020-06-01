@@ -1,11 +1,12 @@
 package pets_amok;
 
-public class Dog extends VirtualPet implements Organic{
+public class Dog extends VirtualPet implements Organic {
 
     private int hunger;
     private int cageCleanliness;
     private int waste;
     private int thirst;
+    private int needToGoToBathroom;
 
     public Dog(String name, String description) {
         super(name, description);
@@ -13,17 +14,18 @@ public class Dog extends VirtualPet implements Organic{
         this.cageCleanliness = rand.nextInt(5) + 3;
         this.attention = rand.nextInt(5) + 3;
         this.thirst = rand.nextInt(5) + 3;
-        this.health = 10 - (((((20 - hunger) - (10 -thirst)) / 2) + cageCleanliness) / 2);
+        this.health = 10 - (((((20 - hunger) - (10 - thirst)) / 2) + cageCleanliness) / 2);
         this.happiness = (health + attention) / 2;
         this.type = "Dog";
+        this.needToGoToBathroom = 0;
     }
 
     @Override
-    public int tick() {
+    public void tick() {
+        needToGoToBathroom += 1;
         hunger += 1;
         cageCleanliness -= 1;
-        attention -=1;
-        return getWaste();
+        attention -= 1;
     }
 
     @Override
@@ -44,6 +46,13 @@ public class Dog extends VirtualPet implements Organic{
     public void water() {
         thirst -= 3;
         cageCleanliness -= 1;
+    }
+
+    @Override
+    public void play() {
+        attention += 3;
+        hunger += 1;
+        thirst += 1;
     }
 
     @Override
@@ -69,5 +78,16 @@ public class Dog extends VirtualPet implements Organic{
     @Override
     public int getWaste() {
         return waste;
+    }
+
+    @Override
+    public int getNeedToGoToBathroom() {
+        return needToGoToBathroom;
+    }
+
+    @Override
+    public void usesBathroomInCage() {
+        cageCleanliness -= 4;
+        waste += 2;
     }
 }

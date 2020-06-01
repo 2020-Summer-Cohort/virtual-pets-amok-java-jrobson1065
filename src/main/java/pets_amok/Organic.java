@@ -9,5 +9,7 @@ public interface Organic {
     public int getCageCleanliness();
     public int getWaste();
     public int getThirst();
+    public int getNeedToGoToBathroom();
+    public void usesBathroomInCage();
 
 }

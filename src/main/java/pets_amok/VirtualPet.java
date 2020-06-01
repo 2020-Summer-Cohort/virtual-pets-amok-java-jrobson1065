@@ -16,8 +16,9 @@ public abstract class VirtualPet {
         this.description = description;
     }
 
-    public abstract int tick();
+    public abstract void tick();
     public abstract void walk();
+    public abstract void play();
 
     public int getHappiness(){
         return happiness;
@@ -25,10 +26,6 @@ public abstract class VirtualPet {
 
     public int getHealth() {
         return health;
-    }
-
-    public int getAttention() {
-        return attention;
     }
 
     public String getName() {
