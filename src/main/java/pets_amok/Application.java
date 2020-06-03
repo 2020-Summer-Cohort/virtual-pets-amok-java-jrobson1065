@@ -4,6 +4,14 @@ import java.util.Collection;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+// -While you did right by finishing the application rather than get stuck on tests, we want to see test coverage for the application,
+// particularly for the Shelter class
+
+// -Need to see user choices you have commented out working
+
+// -Your VirtualPet class hierarchy could be improved. Whenever you see duplicate code like in your Cat and Dog classes, that's an opportunity
+// to create a common parent class that contains your hunger, thirst, and boredom fields in addition to shared methods
+
 public class Application {
     private static Shelter shelter = new Shelter();
     private static Collection<VirtualPet> pets = shelter.showAllPets();
